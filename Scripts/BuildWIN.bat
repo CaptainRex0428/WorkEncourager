@@ -43,9 +43,9 @@ if errorlevel 1 (
     goto :fail
 )
 
-powershell -NoProfile -Command "$hash = (Get-FileHash -LiteralPath 'dist\WorkEncourager.exe' -Algorithm SHA256).Hash.ToLower(); Set-Content -LiteralPath 'dist\SHA256SUMS.txt' -Value ($hash + '  WorkEncourager.exe') -Encoding ASCII"
+powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\WriteChecksums.ps1"
 if errorlevel 1 (
-    echo [WorkEncourager] Could not generate the SHA-256 checksum.
+    echo [WorkEncourager] Could not generate SHA-256 checksums.
     goto :fail
 )
 

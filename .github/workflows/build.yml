@@ -22,18 +22,42 @@ jobs:
         shell: cmd
         run: Scripts\BuildWIN.bat --no-pause
 
+      - name: Ensure Inno Setup
+        shell: pwsh
+        run: |
+          if (-not (Get-Command iscc -ErrorAction SilentlyContinue) -and
+              -not (Test-Path "$env:ProgramFiles(x86)\Inno Setup 6\ISCC.exe")) {
+            choco install innosetup --no-progress -y
+          }
+
+      - name: Build installer
+        shell: cmd
+        run: Scripts\BuildInstaller.bat --no-pause
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: WorkEncourager-x64
           path: |
             dist/WorkEncourager.exe
+            dist/WorkEncourager-Setup-*.exe
             dist/SHA256SUMS.txt
           if-no-files-found: error
+
+      - name: Attach installer to v1.4.0 release
+        if: github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[attach-installer]')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $setup = Get-ChildItem dist/WorkEncourager-Setup-*.exe | Select-Object -First 1
+          gh release upload v1.4.0 $setup.FullName --clobber
 
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create $env:GITHUB_REF_NAME dist/WorkEncourager.exe dist/SHA256SUMS.txt --title "Work Encourager $env:GITHUB_REF_NAME" --generate-notes
+        run: |
+          $setup = Get-ChildItem dist/WorkEncourager-Setup-*.exe | Select-Object -First 1
+          gh release create $env:GITHUB_REF_NAME dist/WorkEncourager.exe $setup.FullName dist/SHA256SUMS.txt --title "Work Encourager $env:GITHUB_REF_NAME" --generate-notes

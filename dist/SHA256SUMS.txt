@@ -1,1 +1,2 @@
 0b774d04c4d5a218615a73a439a0f4cce99ac30407aa4aff7f54ec6442108c08  WorkEncourager.exe
+8823d0ccef947dba978ccec8a25b4a9f034d45d75e812398f80a834d363f8fa4  WorkEncourager-Setup-1.4.0.exe

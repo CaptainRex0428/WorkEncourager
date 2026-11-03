@@ -13,18 +13,36 @@
 
 ![主界面](docs/preview.png)
 
-## 下载 / 直接运行
+## 下载 / 安装
 
 当前版本：**v1.4.0**（[更新日志](CHANGELOG.md)）
 
-仓库里直接提供了构建好的 x64 可执行文件：
+### 安装版（推荐）
+
+**[下载安装包 WorkEncourager-Setup-1.4.0.exe](dist/WorkEncourager-Setup-1.4.0.exe)**  
+Windows 10 / 11 x64 · 约 2.2 MB
+
+双击安装包，按向导完成安装。默认安装到当前用户的：
+
+```
+%LOCALAPPDATA%\Programs\WorkEncourager
+```
+
+- 不需要管理员权限。
+- 自动创建开始菜单快捷方式和卸载入口。
+- 桌面快捷方式可选。
+- 可从「设置 → 应用 → 已安装的应用」或开始菜单里的“卸载上班鼓励器”卸载。
+- 卸载默认保留 `%LOCALAPPDATA%\WorkEncourager\settings.ini` 中的个人设置。
+- 安装包未做代码签名，Windows SmartScreen 可能显示未知发布者提示。
+
+### 便携版
 
 **[下载 WorkEncourager.exe](dist/WorkEncourager.exe)**  
 Windows 10 / 11 x64 · 约 326 KB · 静态 CRT，无需安装 VC++ 运行库。
 
-[GitHub Releases](https://github.com/CaptainRex0428/WorkEncourager/releases) 会随每个 `v*` 标签由 CI 自动生成，并附带 exe 与校验文件。
+下载后直接双击运行。也可以使用 [GitHub Releases](https://github.com/CaptainRex0428/WorkEncourager/releases) 中的发布资产；安装包、便携版和校验文件都会随版本标签由 CI 生成。
 
-下载后双击即可。默认节奏如下：
+默认节奏：
 
 - 月薪按平均 **21 个工作日/月** 折算成日薪，再按本班时长折算时薪。
 - 默认显示今天实时累计的“已赚”、下班倒计时、工时进度和本月累计。
@@ -136,7 +154,30 @@ Scripts\BuildWIN.bat
 
 ### 自动构建
 
-仓库配置了 GitHub Actions：`.github/workflows/build.yml` 会在每次 push / pull request 时编译 `Dist | x64`，并上传构建产物。推送 `v*` 标签时会自动创建对应的 GitHub Release，并附加 exe 与 SHA-256 校验文件。
+仓库配置了 GitHub Actions：`.github/workflows/build.yml` 会在每次 push / pull request 时编译 `Dist | x64`、生成安装包，并上传构建产物。推送 `v*` 标签时会自动创建对应的 GitHub Release，并附加便携版、安装包和 SHA-256 校验文件。
+
+### 构建安装包
+
+安装 [Inno Setup 6](https://jrsoftware.org/isdl.php)，确保 `ISCC.exe` 在以下任一位置：
+
+- `%LOCALAPPDATA%\Programs\Inno Setup 6\ISCC.exe`
+- `%ProgramFiles(x86)%\Inno Setup 6\ISCC.exe`
+- `%ProgramFiles%\Inno Setup 6\ISCC.exe`
+- `PATH`
+
+然后运行：
+
+```bat
+Scripts\BuildInstaller.bat
+```
+
+脚本读取 `dist\WorkEncourager.exe`，生成：
+
+```
+dist\WorkEncourager-Setup-1.4.0.exe
+```
+
+并更新 `dist\SHA256SUMS.txt`。安装包的 Inno Setup 脚本位于 `installer\WorkEncourager.iss`，默认按用户安装，不请求管理员权限。
 
 ### 标准 Premake 调用
 
@@ -158,7 +199,9 @@ msbuild WorkEncourager.sln /m /p:Configuration=Dist /p:Platform=x64
 
 | 产物 | 路径 |
 |---|---|
-| 最终可执行文件 | `dist\WorkEncourager.exe` |
+| 便携版可执行文件 | `dist\WorkEncourager.exe` |
+| 安装包 | `dist\WorkEncourager-Setup-1.4.0.exe` |
+| SHA-256 校验 | `dist\SHA256SUMS.txt` |
 | Premake / MSBuild 原始输出 | `bin\windows-x86_64\Dist\WorkEncourager.exe` |
 | 中间文件 | `bin\obj\windows-x86_64\Dist\WorkEncourager` |
 | 生成工程 | `settings\` |
@@ -193,10 +236,16 @@ msbuild WorkEncourager.sln /m /p:Configuration=Dist /p:Platform=x64
 ├─ Scripts/
 │  ├─ GenerateWIN.bat        仅生成 VS2022 解决方案
 │  ├─ BuildWIN.bat           生成 + 编译 + 复制到 dist
+│  ├─ BuildInstaller.bat     生成 Inno Setup 安装包
+│  ├─ WriteChecksums.ps1     生成发布文件 SHA-256 校验
 │  └─ Premake/premake5.exe   项目内置的 Premake 5.0.0
+├─ installer/
+│  ├─ WorkEncourager.iss     Inno Setup 安装脚本
+│  └─ languages/             安装向导中文翻译
 ├─ docs/                     README 截图资源
 └─ dist/
-   ├─ WorkEncourager.exe     可直接运行的发布二进制
+   ├─ WorkEncourager.exe     可直接运行的便携版
+   ├─ WorkEncourager-Setup-1.4.0.exe  安装包
    └─ SHA256SUMS.txt        发布文件校验值
 ```
 

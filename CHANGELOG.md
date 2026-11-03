@@ -13,7 +13,9 @@
 - 关闭主窗口后驻留后台，计时和托盘提示继续运行。
 - 单实例唤醒：重复启动时唤起已运行的实例。
 - Per-Monitor V2 高 DPI、DWM 圆角窗口和自定义图标资源。
-- GitHub Actions 自动构建，标签推送时自动创建 Release。
+- Windows 安装包：Inno Setup 生成，按用户安装，含开始菜单/卸载入口和可选桌面快捷方式。
+- 安装包中文向导翻译。
+- GitHub Actions 自动构建和生成安装包，标签推送时自动创建 Release。
 - README 界面截图、Premake 构建脚本和 MIT 许可证。
 
 ### Changed

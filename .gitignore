@@ -21,6 +21,7 @@ dist/*
 
 # Release artifact and bundled tool kept in the repository
 !dist/WorkEncourager.exe
+!dist/WorkEncourager-Setup-*.exe
 !dist/SHA256SUMS.txt
 !Scripts/Premake/premake5.exe
 
