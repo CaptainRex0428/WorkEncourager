@@ -44,15 +44,6 @@ jobs:
             dist/SHA256SUMS.txt
           if-no-files-found: error
 
-      - name: Attach installer to v1.4.0 release
-        if: github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[attach-installer]')
-        shell: pwsh
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          $setup = Get-ChildItem dist/WorkEncourager-Setup-*.exe | Select-Object -First 1
-          gh release upload v1.4.0 $setup.FullName --clobber
-
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         shell: pwsh

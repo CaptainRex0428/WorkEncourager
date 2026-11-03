@@ -179,6 +179,8 @@ dist\WorkEncourager-Setup-1.4.0.exe
 
 并更新 `dist\SHA256SUMS.txt`。安装包的 Inno Setup 脚本位于 `installer\WorkEncourager.iss`，默认按用户安装，不请求管理员权限。
 
+> 重新构建或覆盖安装前，请先从系统托盘退出正在运行的旧版本，否则 Windows 会锁定 `dist\WorkEncourager.exe` 或安装目录中的文件。
+
 ### 标准 Premake 调用
 
 与 NCpp 的流程一致，先进入仓库根目录：
