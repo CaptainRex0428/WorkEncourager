@@ -1,0 +1,34 @@
+# Premake / Visual Studio
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.vs
+settings/
+.vs/
+
+# Build output
+bin/
+dist/*
+*.obj
+*.pdb
+*.ilk
+*.exe
+*.lib
+*.exp
+*.iobj
+*.ipdb
+
+# Release artifact and bundled tool kept in the repository
+!dist/WorkEncourager.exe
+!dist/SHA256SUMS.txt
+!Scripts/Premake/premake5.exe
+
+# IDE user files
+.idea/
+.run/
+.vscode/
+
+# Temporary captures (kept out of source control, previews remain in docs)
+docs/raw-*.png
+docs/test-*.png
